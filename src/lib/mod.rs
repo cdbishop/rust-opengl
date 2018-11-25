@@ -259,6 +259,8 @@ impl RglMesh {
                       &vertices[0] as *const f32 as *const c_void,
                       gl::STATIC_DRAW);
 
+      // TODO(cb): store vertex elements separately then build up at runtime the vertex attrib
+      // based on which values exist (e.g. texCoords, normals etc)
       let stride = 6 * mem::size_of::<GLfloat>() as GLsizei;
 
       // x, y, z position data
