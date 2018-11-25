@@ -8,9 +8,13 @@ use gl::types::*;
 use std::ptr;
 use std::str;
 use std::fs;
+use std::path::Path;
 
 use std::mem;
 use std::os::raw::c_void;
+
+extern crate image;
+use self::image::GenericImage;
 
 ///////////////////////////////////////////////////////
 /// RglContext 
@@ -76,15 +80,15 @@ impl RglWindow {
 
   pub fn process_events(&mut self) {
     for (_, event) in glfw::flush_messages(&self.events) {
-        match event {
-            glfw::WindowEvent::FramebufferSize(width, height) => {
-                // make sure the viewport matches the new window dimensions; note that width and
-                // height will be significantly larger than specified on retina displays.
-                unsafe { gl::Viewport(0, 0, width, height) }
-            }
-            glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => self.window.set_should_close(true),
-            _ => {}
+      match event {
+        glfw::WindowEvent::FramebufferSize(width, height) => {
+            // make sure the viewport matches the new window dimensions; note that width and
+            // height will be significantly larger than specified on retina displays.
+            unsafe { gl::Viewport(0, 0, width, height) }
         }
+        glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => self.window.set_should_close(true),
+        _ => {}
+      }
     }
   }
 
@@ -144,8 +148,8 @@ impl RglShader {
       info_log.set_len(512 - 1); // subtract 1 to skip the trailing null character
       gl::GetShaderiv(shader, gl::COMPILE_STATUS, &mut success);
       if success != gl::TRUE as GLint {
-          gl::GetShaderInfoLog(shader, 512, ptr::null_mut(), info_log.as_mut_ptr() as *mut GLchar);        
-          err = format!("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n{}", str::from_utf8(&info_log).unwrap()).to_string();
+        gl::GetShaderInfoLog(shader, 512, ptr::null_mut(), info_log.as_mut_ptr() as *mut GLchar);        
+        err = format!("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n{}", str::from_utf8(&info_log).unwrap()).to_string();
       }
 
       (success, err)
@@ -190,8 +194,8 @@ impl RglShaderProgram {
       info_log.set_len(512 - 1); // subtract 1 to skip the trailing null character      
       gl::GetProgramiv(program, gl::LINK_STATUS, &mut success);
       if success != gl::TRUE as GLint {
-          gl::GetShaderInfoLog(program, 512, ptr::null_mut(), info_log.as_mut_ptr() as *mut GLchar);        
-          err = format!("ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n{}", str::from_utf8(&info_log).unwrap()).to_string();
+        gl::GetShaderInfoLog(program, 512, ptr::null_mut(), info_log.as_mut_ptr() as *mut GLchar);        
+        err = format!("ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n{}", str::from_utf8(&info_log).unwrap()).to_string();
       }
 
       (success, err)
@@ -204,8 +208,10 @@ impl RglShaderProgram {
     return Ok( RglShaderProgram { id: program });
   }
 
-  pub unsafe fn apply(&self) {
-    gl::UseProgram(self.id);
+  pub fn apply(&self) {
+    unsafe {
+      gl::UseProgram(self.id);
+    }
   }
 
   pub fn find_uniform(&self, uniform: &str) -> i32 {
@@ -285,11 +291,56 @@ impl RglMesh {
     return RglMesh {vertex_buffer: vertex_array};
   }
 
-  pub unsafe fn bind(&self) {
-    gl::BindVertexArray(self.vertex_buffer);
+  pub fn bind(&self) {
+    unsafe {
+      gl::BindVertexArray(self.vertex_buffer);
+    }
   }
 
-  pub unsafe fn draw(&self) {
-    gl::DrawArrays(gl::TRIANGLES, 0, 3);
+  pub fn draw(&self) {
+    unsafe {
+      gl::DrawArrays(gl::TRIANGLES, 0, 3);
+    }
+  }
+}
+
+///////////////////////////////////////////////////////
+/// RglTexture
+///////////////////////////////////////////////////////
+
+pub struct RglTexture {
+  id: GLuint,
+}
+
+impl RglTexture {
+
+  pub fn from_file(path: &str) -> RglTexture {
+    let id = unsafe {
+      let mut texture_id = 0;
+      gl::GenTextures(1, &mut texture_id);
+      gl::BindTexture(gl::TEXTURE_2D, texture_id);
+      gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as i32);
+      gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_T, gl::REPEAT as i32);
+      gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::LINEAR as i32);
+      gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR as i32);
+
+      let img = image::open(&Path::new(path)).expect("Failed to load texture");
+      let data = img.raw_pixels();
+      gl::TexImage2D(gl::TEXTURE_2D, 0,
+        gl::RGB as i32, img.width() as i32, img.height() as i32, 0,
+        gl::RGB, gl::UNSIGNED_BYTE, &data[0] as *const u8 as *const c_void);
+
+      gl::GenerateMipmap(gl::TEXTURE_2D);
+
+      texture_id
+    };
+
+    RglTexture { id: id }
+  }
+
+  pub fn bind(&self) {
+    unsafe {
+      gl::BindTexture(gl::TEXTURE_2D, self.id);
+    }
   }
 }
