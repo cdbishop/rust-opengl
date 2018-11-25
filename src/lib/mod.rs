@@ -7,6 +7,7 @@ use gl::types::*;
 
 use std::ptr;
 use std::str;
+use std::fs;
 
 use std::mem;
 use std::os::raw::c_void;
@@ -87,12 +88,23 @@ impl RglWindow {
     }
   }
 
+  pub fn clear(&mut self, r: f32, g: f32, b: f32, a: f32, buffer_type: gl::types::GLenum) {
+    unsafe {
+      gl::ClearColor(r, g, b, a);
+      gl::Clear(buffer_type);
+    }
+  }
+
   pub fn swap_buffers(&mut self) {
     self.window.swap_buffers();
   }
 
   pub fn poll_events(&mut self) {
     self.ctx.poll_events();
+  }
+
+  pub fn get_time(&mut self) -> f32 {
+    return self.ctx.ctx.get_time() as f32;
   }
 }
 
@@ -145,6 +157,11 @@ impl RglShader {
     
     return Ok(RglShader { id: shader, kind: kind })
   }
+
+  pub fn from_file(file: &str, kind: RglShaderKind) -> Result<RglShader, String> {
+    let source = fs::read_to_string(file).unwrap();
+    return RglShader::from_source(&source, kind);
+  }
 }
 
 ///////////////////////////////////////////////////////
@@ -184,12 +201,29 @@ impl RglShaderProgram {
       return Err(link_err);
     }
 
-
     return Ok( RglShaderProgram { id: program });
   }
 
   pub unsafe fn apply(&self) {
     gl::UseProgram(self.id);
+  }
+
+  pub fn find_uniform(&self, uniform: &str) -> i32 {
+    let c_str_uniform = CString::new(uniform.as_bytes()).unwrap();
+
+    let uniform_location = unsafe {
+      let id = gl::GetUniformLocation(self.id, c_str_uniform.as_ptr());
+      id
+    };
+
+    return uniform_location;
+  }
+
+  pub fn set_uniform(&self, uniform: &str, value: &[f32; 4]) {
+    let location = self.find_uniform(uniform);
+    unsafe {
+      gl::ProgramUniform4f(self.id, location, value[0], value[1], value[2], value[3]);
+    }
   }
 }
 
@@ -225,12 +259,14 @@ impl RglMesh {
                       &vertices[0] as *const f32 as *const c_void,
                       gl::STATIC_DRAW);
 
+      let stride = 6 * mem::size_of::<GLfloat>() as GLsizei;
+
       // x, y, z position data
-      gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, 3 * mem::size_of::<GLfloat>() as GLsizei, ptr::null());
+      gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, stride, ptr::null());
       gl::EnableVertexAttribArray(0);
 
       // r, g, b, color data
-      gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE, 3 * mem::size_of::<GLfloat>() as GLsizei, ptr::null());
+      gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE, stride, (3 * mem::size_of::<GLfloat>()) as *const c_void);
       gl::EnableVertexAttribArray(1);
 
       // note that this is allowed, the call to gl::VertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
@@ -249,5 +285,9 @@ impl RglMesh {
 
   pub unsafe fn bind(&self) {
     gl::BindVertexArray(self.vertex_buffer);
+  }
+
+  pub unsafe fn draw(&self) {
+    gl::DrawArrays(gl::TRIANGLES, 0, 3);
   }
 }
