@@ -2,17 +2,18 @@ extern crate gl;
 
 extern crate glfw;
 
-mod lib;
+mod rgl;
 
-use lib::{
+use rgl::{
   RglContext,
   RglWindow,
+  RglMesh,
+  RglTexture,
   RglShader,
   RglShaderKind,
   RglShaderProgram,
-  RglMesh,
-  RglTexture
 };
+
 
 #[allow(non_snake_case)]
 pub fn main() {    
