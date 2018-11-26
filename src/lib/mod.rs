@@ -299,7 +299,7 @@ impl RglMesh {
     return RglMesh {vertex_buffer: vertex_array, texture: None};
   }
 
-  pub fn from_pos_col_tex(positions: &[f32], colors: &[f32], texcoords: &[f32]) -> RglMesh {
+  pub fn from_pos_col_tex(positions: &[f32], colors: &[f32], texcoords: &[f32], num_vertex: u32) -> RglMesh {
     let (mut vertex_buffer, mut vertex_array) = (0, 0);
 
     unsafe {
@@ -309,9 +309,20 @@ impl RglMesh {
       gl::BindVertexArray(vertex_array);
 
       let mut vertices = Vec::new();
-      vertices.extend_from_slice(positions);
-      vertices.extend_from_slice(colors);
-      vertices.extend_from_slice(texcoords);
+      for x in 0..num_vertex {
+        let idx_pos = 3 * x as usize;
+        if positions.len() > 0 {
+          vertices.extend_from_slice(&positions[idx_pos..idx_pos+3]);
+        }        
+        let idx_col = 3 * x as usize;
+        if colors.len() > 0 {
+          vertices.extend_from_slice(&colors[idx_col..idx_col+3]);
+        }        
+        let idx_tex = 2 * x as usize;
+        if texcoords.len() > 0 {
+          vertices.extend_from_slice(&texcoords[idx_tex..idx_tex+2]);
+        }        
+      }
 
       gl::BindBuffer(gl::ARRAY_BUFFER, vertex_buffer);
       gl::BufferData(gl::ARRAY_BUFFER,
@@ -343,8 +354,8 @@ impl RglMesh {
 
       if texcoords.len() > 0 {
         // u, v
-        gl::VertexAttribPointer(2, 2, gl::FLOAT, gl::FALSE, stride, (2 * mem::size_of::<GLfloat>()) as *const c_void);
-        gl::EnableVertexAttribArray(1);
+        gl::VertexAttribPointer(2, 2, gl::FLOAT, gl::FALSE, stride, (6 * mem::size_of::<GLfloat>()) as *const c_void);
+        gl::EnableVertexAttribArray(2);
       }
 
       // note that this is allowed, the call to gl::VertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind

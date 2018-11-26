@@ -57,12 +57,12 @@ pub fn main() {
     ];
 
     let tex: [f32; 6] = [
-      0.5, 0.0, 
-      1.0, 1.0, 
-      0.0, 1.0,
+      0.0, 1.0, 
+      1.0, 1.0,
+      0.5, 0.0,
     ];
 
-    let mut triangle = RglMesh::from_pos_col_tex(&pos, &col, &tex);
+    let mut triangle = RglMesh::from_pos_col_tex(&pos, &col, &tex, 3);    
     triangle.set_texture(texture);
     triangle
   };
