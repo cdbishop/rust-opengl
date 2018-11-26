@@ -10,7 +10,8 @@ use lib::{
   RglShader,
   RglShaderKind,
   RglShaderProgram,
-  RglMesh
+  RglMesh,
+  RglTexture
 };
 
 #[allow(non_snake_case)]
@@ -21,20 +22,48 @@ pub fn main() {
   window.load_gl_extensions();
 
   let shaderProgram = {      
-    let vertexShader = RglShader::from_file("shaders/color.vert", RglShaderKind::Vertex).unwrap();
-    let fragmentShader = RglShader::from_file("shaders/color.frag", RglShaderKind::Fragment).unwrap();
+    //let vertexShader = RglShader::from_file("shaders/color.vert", RglShaderKind::Vertex).unwrap();
+    //let fragmentShader = RglShader::from_file("shaders/color.frag", RglShaderKind::Fragment).unwrap();
+    let vertexShader = RglShader::from_file("shaders/textured.vert", RglShaderKind::Vertex).unwrap();
+    let fragmentShader = RglShader::from_file("shaders/textured.frag", RglShaderKind::Fragment).unwrap();
     let shaderProgram = RglShaderProgram::link(vertexShader, fragmentShader).unwrap();       
 
     shaderProgram
   };
 
+  // let triangle = {
+  //   let vertices: [f32; 18] = [
+  //     -0.5, -0.5, 0.0, 1.0, 0.0, 0.0,
+  //     0.5, -0.5, 0.0, 0.0, 1.0, 0.0,
+  //     0.0,  0.5, 0.0, 0.0, 0.0, 1.0
+  //   ];
+  //   let triangle = RglMesh::from_vertex_data(&vertices);
+  //   triangle
+  // };
+
   let triangle = {
-    let vertices: [f32; 18] = [
-      -0.5, -0.5, 0.0, 1.0, 0.0, 0.0,
-      0.5, -0.5, 0.0, 0.0, 1.0, 0.0,
-      0.0,  0.5, 0.0, 0.0, 0.0, 1.0
+    let texture = RglTexture::from_file("textures/brickwall.jpg");
+
+    let pos: [f32; 9] = [
+      -0.5, -0.5, 0.0,
+      0.5, -0.5, 0.0,
+      0.0,  0.5, 0.0,
     ];
-    let triangle = RglMesh::from_vertex_data(&vertices);
+
+    let col: [f32; 9] = [
+      1.0, 0.0, 0.0,
+      0.0, 1.0, 0.0,
+      0.0, 0.0, 1.0
+    ];
+
+    let tex: [f32; 6] = [
+      0.5, 0.0, 
+      1.0, 1.0, 
+      0.0, 1.0,
+    ];
+
+    let mut triangle = RglMesh::from_pos_col_tex(&pos, &col, &tex);
+    triangle.set_texture(texture);
     triangle
   };
 
@@ -50,7 +79,8 @@ pub fn main() {
 
     // draw our first triangle            
     shaderProgram.apply();
-    shaderProgram.set_uniform("inColor", &[0.0, window.get_time().sin() / 2.0 + 0.5, 0.0, 1.0]);
+    //shaderProgram.set_uniform_4f("inColor", &[0.0, window.get_time().sin() / 2.0 + 0.5, 0.0, 1.0]);
+    shaderProgram.set_uniform_1i("texture1", 0);
     triangle.bind();
     triangle.draw();            
     // glBindVertexArray(0); // no need to unbind it every time
