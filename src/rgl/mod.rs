@@ -3,6 +3,7 @@ pub mod core;
 pub mod mesh;
 pub mod shader;
 pub mod texture;
+pub mod application;
 
 pub use self::core::{
   RglContext,
@@ -21,4 +22,8 @@ pub use self::shader::{
   RglShader,
   RglShaderKind,
   RglShaderProgram,
+};
+
+pub use self::application::{
+  RglApplication,
 };
