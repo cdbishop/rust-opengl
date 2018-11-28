@@ -11,13 +11,15 @@ use rgl::{
 
 use examples::ColouredTriangle::ColouredTriangle;
 use examples::TexturedTriangle::TexturedTriangle;
+use examples::TexturedQuad::TexturedQuad;
 
 pub fn main() {
   //colored_triangle_app();
   //textured_triangle_app();
 
   //let app = ColouredTriangle::init();
-  let app = TexturedTriangle::init();
+  //let app = TexturedTriangle::init();
+  let app = TexturedQuad::init();
   run_app(app);
 }
 
