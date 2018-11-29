@@ -7,6 +7,9 @@ use std::ptr;
 use std::str;
 use std::fs;
 
+use cgmath::{Matrix4, vec3, Rad};
+use cgmath::prelude::*;
+
 ///////////////////////////////////////////////////////
 /// RglShader
 ///////////////////////////////////////////////////////
@@ -131,6 +134,13 @@ impl RglShaderProgram {
     let location = self.find_uniform(uniform);
     unsafe {
       gl::ProgramUniform1i(self.id, location, value);
+    }
+  }
+
+  pub fn set_uniform_4fv(&self, uniform: &str, value: &Matrix4<f32>) {
+    let location = self.find_uniform(uniform);
+    unsafe {
+      gl::UniformMatrix4fv(location, 1, gl::FALSE, value.as_ptr());
     }
   }
 }
