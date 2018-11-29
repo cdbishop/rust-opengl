@@ -86,7 +86,7 @@ impl RglMesh {
           vertices.extend_from_slice(&colors[idx_col..idx_col+3]);
         }        
         let idx_tex = 2 * x as usize;
-        if texcoords.len() > 0 {
+        if texcoords.len() > 0 {          
           vertices.extend_from_slice(&texcoords[idx_tex..idx_tex+2]);
         }        
       }
@@ -113,15 +113,18 @@ impl RglMesh {
       gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, stride, ptr::null());
       gl::EnableVertexAttribArray(0);
 
+      let mut offset = 3;
+
       if colors.len() > 0 {
         // r, g, b, color data
-        gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE, stride, (3 * mem::size_of::<GLfloat>()) as *const c_void);
+        gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE, stride, (offset * mem::size_of::<GLfloat>()) as *const c_void);
         gl::EnableVertexAttribArray(1);
+        offset = offset + 3;
       }
 
       if texcoords.len() > 0 {
         // u, v
-        gl::VertexAttribPointer(2, 2, gl::FLOAT, gl::FALSE, stride, (6 * mem::size_of::<GLfloat>()) as *const c_void);
+        gl::VertexAttribPointer(2, 2, gl::FLOAT, gl::FALSE, stride, (offset * mem::size_of::<GLfloat>()) as *const c_void);
         gl::EnableVertexAttribArray(2);
       }
 
@@ -242,15 +245,18 @@ impl RglMesh {
       gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE, stride, ptr::null());
       gl::EnableVertexAttribArray(0);
 
+      let mut offset = 3;
+
       if colors.len() > 0 {
         // r, g, b, color data
-        gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE, stride, (3 * mem::size_of::<GLfloat>()) as *const c_void);
+        gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE, stride, (offset * mem::size_of::<GLfloat>()) as *const c_void);
         gl::EnableVertexAttribArray(1);
+        offset = offset + 3;
       }
 
       if texcoords.len() > 0 {
         // u, v
-        gl::VertexAttribPointer(2, 2, gl::FLOAT, gl::FALSE, stride, (6 * mem::size_of::<GLfloat>()) as *const c_void);
+        gl::VertexAttribPointer(2, 2, gl::FLOAT, gl::FALSE, stride, (offset * mem::size_of::<GLfloat>()) as *const c_void);
         gl::EnableVertexAttribArray(2);
       }
 
