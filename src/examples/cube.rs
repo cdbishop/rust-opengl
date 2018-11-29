@@ -126,7 +126,7 @@ impl RglApplication for Cube {
         0.0, 1.0
       ];
 
-      let mut Quad = RglMesh::from_pos_col_tex(&pos, &[], &tex, 36);    
+      let mut Quad = RglMesh::from_pos_col_tex(&pos, &[], &tex, 36);
       Quad.set_texture(texture);
       Quad
     };
@@ -142,12 +142,8 @@ impl RglApplication for Cube {
     self.shader_program.apply();
     self.shader_program.set_uniform_1i("texture1", 0);
 
-    // let mut transform: Matrix4<f32> = Matrix4::identity();
-    // transform = transform * Matrix4::<f32>::from_translation(vec3(0.5, -0.5, 0.0));
-    // transform = transform * Matrix4::<f32>::from_angle_Y(Rad(self.window.get_time() as f32));
-
-    let model: Matrix4<f32> = Matrix4::from_axis_angle(vec3(0.5, 1.0, 0.0).normalize(),
-                                                               Rad(self.window.get_time() as f32));
+     let model: Matrix4<f32> = Matrix4::from_axis_angle(vec3(0.5, 1.0, 0.0).normalize(),
+                                                                Rad(self.window.get_time() as f32));
     let view: Matrix4<f32> = Matrix4::from_translation(vec3(0., 0., -3.));
     let projection: Matrix4<f32> = perspective(Deg(45.0), 800 as f32 / 600 as f32, 0.1, 100.0);
     let transformation = projection.mul(view.mul(model));

@@ -61,7 +61,10 @@ impl RglWindow {
 
   pub fn load_gl_extensions(&mut self) {
     gl::load_with(|symbol| self.window.get_proc_address(symbol) as *const _);
-
+    
+    unsafe {
+      gl::Enable(gl::DEPTH_TEST);
+    }
   }
 
   pub fn should_close(&self) -> bool {
