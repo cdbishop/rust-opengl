@@ -18,7 +18,7 @@ use std::ops::Mul;
 pub struct Cube {
   pub window: RglWindow,
   pub shader_program: RglShaderProgram,
-  pub Quad: RglMesh,
+  pub quad: RglMesh,
 }
 
 impl RglApplication for Cube {
@@ -35,7 +35,7 @@ impl RglApplication for Cube {
       shader_program
     };
 
-    let Quad = {
+    let quad = {
       let texture = RglTexture::from_file("textures/brickwall.jpg");
 
       let pos: [f32; 108] = [
@@ -126,12 +126,12 @@ impl RglApplication for Cube {
         0.0, 1.0
       ];
 
-      let mut Quad = RglMesh::from_pos_col_tex(&pos, &[], &tex, 36);
-      Quad.set_texture(texture);
-      Quad
+      let mut quad = RglMesh::from_pos_col_tex(&pos, &[], &tex, 36);
+      quad.set_texture(texture);
+      quad
     };
 
-    Cube { window, shader_program, Quad }
+    Cube { window, shader_program, quad }
   }
 
   fn update(&mut self) {
@@ -150,8 +150,8 @@ impl RglApplication for Cube {
 
     self.shader_program.set_uniform_4fv("transform", &transformation);
 
-    self.Quad.bind();
-    self.Quad.draw(); 
+    self.quad.bind();
+    self.quad.draw(); 
 
   }
 

@@ -24,7 +24,7 @@ pub struct RglMesh {
 impl RglMesh {
   pub fn from_vertex_data(vertices: &[f32]) -> RglMesh {
     let (mut vertex_buffer, mut vertex_array) = (0, 0);
-    let mut num_vertices: u32 = 0;
+    let num_vertices: u32;
 
     unsafe {
       num_vertices = (vertices.len() / 3) as u32;
@@ -144,8 +144,8 @@ impl RglMesh {
 
   pub fn from_vertex_and_index_data(vertices: &[f32], indices: &[i32]) -> RglMesh {
     let (mut vertex_buffer, mut vertex_array) = (0, 0);
-    let (mut index_buffer, mut index_array) = (0, 0);
-    let mut num_vertices = 0;
+    let mut index_buffer = 0;
+    let num_vertices;
 
     unsafe {
       num_vertices = (vertices.len() / 3) as u32;
@@ -192,7 +192,7 @@ impl RglMesh {
 
   pub fn from_pos_col_tex_index(positions: &[f32], colors: &[f32], texcoords: &[f32], indices: &[i32], num_vertex: u32) -> RglMesh {
     let (mut vertex_buffer, mut vertex_array) = (0, 0);
-    let (mut index_buffer, mut index_array) = (0, 0);
+    let mut index_buffer = 0;
 
     unsafe {
       gl::GenVertexArrays(1, &mut vertex_array);
@@ -294,7 +294,7 @@ impl RglMesh {
 
       match &self.index_buffer {
         Some(_) => gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, ptr::null()),
-        None => gl::DrawArrays(gl::TRIANGLES, 0, (self.num_poly as i32))
+        None => gl::DrawArrays(gl::TRIANGLES, 0, self.num_poly as i32)
       }
     }
   }

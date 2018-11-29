@@ -10,11 +10,11 @@ use rgl::{
   RglApplication,
 };
 
-use examples::ColouredTriangle::ColouredTriangle;
-use examples::TexturedTriangle::TexturedTriangle;
-use examples::TexturedQuad::TexturedQuad;
-use examples::Transformations::Transformations;
-use examples::Cube::Cube;
+// use examples::ColouredTriangle::ColouredTriangle;
+// use examples::TexturedTriangle::TexturedTriangle;
+// use examples::TexturedQuad::TexturedQuad;
+// use examples::Transformations::Transformations;
+use examples::cube::Cube;
 
 pub fn main() {
   //colored_triangle_app();

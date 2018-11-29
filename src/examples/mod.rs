@@ -1,6 +1,6 @@
 
-pub mod ColouredTriangle;
-pub mod TexturedTriangle;
-pub mod TexturedQuad;
-pub mod Transformations;
-pub mod Cube;
+pub mod colouredtriangle;
+pub mod texturedtriangle;
+pub mod texturedquad;
+pub mod transformations;
+pub mod cube;

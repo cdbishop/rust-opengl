@@ -7,7 +7,7 @@ use std::ptr;
 use std::str;
 use std::fs;
 
-use cgmath::{Matrix4, vec3, Rad};
+use cgmath::{Matrix4};
 use cgmath::prelude::*;
 
 ///////////////////////////////////////////////////////

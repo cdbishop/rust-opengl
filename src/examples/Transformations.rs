@@ -16,7 +16,7 @@ use cgmath::prelude::*;
 pub struct Transformations {
   pub window: RglWindow,
   pub shader_program: RglShaderProgram,
-  pub Quad: RglMesh,
+  pub quad: RglMesh,
 }
 
 impl RglApplication for Transformations {
@@ -33,7 +33,7 @@ impl RglApplication for Transformations {
       shader_program
     };
 
-    let Quad = {
+    let quad = {
       let texture = RglTexture::from_file("textures/brickwall.jpg");
 
       let pos: [f32; 12] = [
@@ -62,12 +62,12 @@ impl RglApplication for Transformations {
         1, 2, 3
       ];
 
-      let mut Quad = RglMesh::from_pos_col_tex_index(&pos, &col, &tex, &indices, 4);    
-      Quad.set_texture(texture);
-      Quad
+      let mut quad = RglMesh::from_pos_col_tex_index(&pos, &col, &tex, &indices, 4);    
+      quad.set_texture(texture);
+      quad
     };
 
-    Transformations { window, shader_program, Quad }
+    Transformations { window, shader_program, quad }
   }
 
   fn update(&mut self) {
@@ -84,8 +84,8 @@ impl RglApplication for Transformations {
 
     self.shader_program.set_uniform_4fv("transform", &transform);
 
-    self.Quad.bind();
-    self.Quad.draw(); 
+    self.quad.bind();
+    self.quad.draw(); 
 
   }
 
