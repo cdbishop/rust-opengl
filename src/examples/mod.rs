@@ -4,3 +4,4 @@ pub mod texturedtriangle;
 pub mod texturedquad;
 pub mod transformations;
 pub mod cube;
+pub mod camera;

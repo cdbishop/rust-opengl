@@ -15,6 +15,7 @@ use rgl::{
 // use examples::TexturedQuad::TexturedQuad;
 // use examples::Transformations::Transformations;
 use examples::cube::Cube;
+use examples::camera::Camera;
 
 pub fn main() {
   //colored_triangle_app();
@@ -24,7 +25,7 @@ pub fn main() {
   //let app = TexturedTriangle::init();
   //let app = TexturedQuad::init();
   //let app = Transformations::init();
-  let app = Cube::init();
+  let app = Camera::init();
   run_app(app);
 }
 
