@@ -4,6 +4,8 @@ pub mod mesh;
 pub mod shader;
 pub mod texture;
 pub mod application;
+pub mod camera;
+pub mod mouse;
 
 pub use self::core::{
   RglContext,
@@ -26,4 +28,12 @@ pub use self::shader::{
 
 pub use self::application::{
   RglApplication,
+};
+
+pub use self::camera::{
+  RglCamera,
+};
+
+pub use self::mouse::{
+  RglMouse,
 };

@@ -27,4 +27,16 @@ pub trait RglApplication {
   fn poll_events(&mut self) {
     self.get_window().poll_events();
   }
+
+  fn key_pressed(&mut self, key: glfw::Key) -> bool {
+    return self.get_window().key_pressed(key);
+  }
+
+  fn pre_update(&mut self) {
+    self.get_window().pre_update();
+  }
+
+  fn post_update(&mut self) {
+    self.get_window().post_update();
+  }
 }

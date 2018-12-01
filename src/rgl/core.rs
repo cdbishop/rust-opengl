@@ -6,12 +6,17 @@ use std::str;
 
 extern crate image;
 
+use rgl::RglMouse;
+use rgl::texture::RglTexture;
+
 ///////////////////////////////////////////////////////
 /// RglContext 
 ///////////////////////////////////////////////////////
 
 pub struct RglContext {
   pub ctx: glfw::Glfw,  
+  last_frame: f32,
+  delta: f32
 }
 
 impl RglContext {
@@ -23,6 +28,8 @@ impl RglContext {
 
     let out = RglContext {
       ctx: glfw,
+      last_frame: 0.0,
+      delta: 0.0
     };
 
     out
@@ -30,6 +37,12 @@ impl RglContext {
 
   pub fn poll_events(&mut self) {
     self.ctx.poll_events();
+  }
+
+  pub fn update_delta(&mut self) {
+    let current_frame = self.ctx.get_time() as f32;
+    self.delta = current_frame - self.last_frame;
+    self.last_frame = current_frame;
   }
 }
 
@@ -40,7 +53,8 @@ impl RglContext {
 pub struct RglWindow {
   pub window: glfw::Window,
   pub events: Receiver<(f64, glfw::WindowEvent)>,
-  pub ctx: RglContext
+  pub ctx: RglContext,
+  pub mouse: RglMouse
 }
 
 impl RglWindow {
@@ -52,10 +66,15 @@ impl RglWindow {
     window.set_key_polling(true);
     window.set_framebuffer_size_polling(true);
 
+    window.set_cursor_pos_polling(true);
+    window.set_scroll_polling(true);
+    window.set_cursor_mode(glfw::CursorMode::Disabled);
+
     RglWindow {
       window: window,
       events: events,
       ctx: ctx,
+      mouse: RglMouse::new(),
     }
   }
 
@@ -80,9 +99,27 @@ impl RglWindow {
             unsafe { gl::Viewport(0, 0, width, height) }
         }
         glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => self.window.set_should_close(true),
+        glfw::WindowEvent::CursorPos(xpos, ypos) => {          
+          self.mouse.update(xpos as f32, ypos as f32);
+        }
+        glfw::WindowEvent::Scroll(_xoffset, _yoffset) => {
+          //self.mouse.updateMouseWheel(yoffset as f32);
+        }
         _ => {}
       }
     }
+  }
+
+  pub fn pre_update(&mut self) {
+    self.ctx.update_delta();
+  }
+
+  pub fn post_update(&mut self) {
+    self.mouse.post_update();
+  }
+
+  pub fn dt(&mut self) -> f32 {
+    return self.ctx.delta;
   }
 
   pub fn clear(&mut self, r: f32, g: f32, b: f32, a: f32, buffer_type: gl::types::GLenum) {
@@ -102,5 +139,9 @@ impl RglWindow {
 
   pub fn get_time(&mut self) -> f32 {
     return self.ctx.ctx.get_time() as f32;
+  }
+
+  pub fn key_pressed(&mut self, key: glfw::Key) -> bool {
+    return self.window.get_key(key) == Action::Press;
   }
 }

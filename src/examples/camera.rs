@@ -1,3 +1,4 @@
+extern crate glfw;
 
 use super::super::rgl::{
   RglContext,
@@ -8,7 +9,10 @@ use super::super::rgl::{
   RglShaderKind,
   RglShaderProgram,
   RglApplication,
+  RglCamera,
 };
+
+use self::glfw::{Key};
 
 use cgmath::{Matrix4, vec3, Rad, perspective, Deg, Point3};
 use cgmath::prelude::*;
@@ -19,6 +23,7 @@ pub struct Camera {
   pub window: RglWindow,
   pub shader_program: RglShaderProgram,
   pub cube: RglMesh,
+  pub cam: RglCamera,
 }
 
 impl RglApplication for Camera {
@@ -131,29 +136,35 @@ impl RglApplication for Camera {
       cube
     };
 
-    Camera { window, shader_program, cube }
+    Camera { window, shader_program, cube, cam: RglCamera::new(Point3::new(0.0, 0.0, 3.0)) }
   }
 
-  fn update(&mut self) {
-    
+  fn update(&mut self) {    
+    let dt = self.get_window().dt();
+    if self.key_pressed(Key::W) {      
+      self.cam.move_forward(2.5 * dt);
+    } else if self.key_pressed(Key::S) {      
+      self.cam.move_forward(-2.5 * dt);
+    }
+
+    if self.key_pressed(Key::A) {
+      self.cam.strafe(-2.5 * dt);
+    } else if self.key_pressed(Key::D) {
+      self.cam.strafe(2.5 * dt);
+    }
+
+    self.cam.rotate_yaw(self.window.mouse.delta_x() * 0.1);
+    self.cam.rotate_pitch(-self.window.mouse.delta_y() * 0.1);
   }
 
   fn draw(&mut self) {
     self.shader_program.apply();
     self.shader_program.set_uniform_1i("texture1", 0);
 
-    //let model: Matrix4<f32> = Matrix4::from_axis_angle(vec3(0.5, 1.0, 0.0).normalize(),
-    //                                                         Rad(self.window.get_time() as f32));
-    
-    let model: Matrix4<f32> = Matrix4::from_axis_angle(vec3(0.5, 1.0, 0.0).normalize(), Rad(0.0));
+    let model: Matrix4<f32> = Matrix4::from_axis_angle(vec3(0.5, 1.0, 0.0).normalize(),
+                                                             Rad(self.window.get_time() as f32));
 
-    // camera code
-    let radius: f32 = 10.0;
-    let camX = self.window.get_time().sin() as f32 * radius;
-    let camZ = self.window.get_time().cos() as f32 * radius;
-    let view: Matrix4<f32> =
-      Matrix4::look_at(Point3::new(camX, 0.0, camZ), Point3::new(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0));
-
+    let view = self.cam.get_view();
     let projection: Matrix4<f32> = perspective(Deg(45.0), 800 as f32 / 600 as f32, 0.1, 100.0);
     let transformation = projection.mul(view.mul(model));
 

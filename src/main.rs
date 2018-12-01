@@ -37,7 +37,9 @@ pub fn run_app<T: RglApplication>(mut app: T) {
     // -----
     app.process_events();
 
+    app.pre_update();
     app.update();
+    app.post_update();
     
     app.clear(0.2, 0.3, 0.3, 1.0, gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
 
