@@ -123,6 +123,20 @@ impl RglShaderProgram {
     return uniform_location;
   }
 
+  pub fn set_uniform_1f(&self, uniform: &str, value: f32) {
+    let location = self.find_uniform(uniform);
+    unsafe {
+      gl::ProgramUniform1f(self.id, location, value);
+    }
+  }
+
+  pub fn set_uniform_3f(&self, uniform: &str, value: &[f32; 3]) {
+    let location = self.find_uniform(uniform);
+    unsafe {
+      gl::ProgramUniform3f(self.id, location, value[0], value[1], value[2]);
+    }
+  }
+
   pub fn set_uniform_4f(&self, uniform: &str, value: &[f32; 4]) {
     let location = self.find_uniform(uniform);
     unsafe {

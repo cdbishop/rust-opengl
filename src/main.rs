@@ -10,22 +10,21 @@ use rgl::{
   RglApplication,
 };
 
-// use examples::ColouredTriangle::ColouredTriangle;
-// use examples::TexturedTriangle::TexturedTriangle;
-// use examples::TexturedQuad::TexturedQuad;
-// use examples::Transformations::Transformations;
+use examples::colouredtriangle::ColouredTriangle;
+use examples::texturedtriangle::TexturedTriangle;
+use examples::texturedquad::TexturedQuad;
+use examples::transformations::Transformations;
 use examples::cube::Cube;
 use examples::camera::Camera;
+use examples::lighting::Lighting;
 
-pub fn main() {
-  //colored_triangle_app();
-  //textured_triangle_app();
+pub fn main() {  
 
-  //let app = ColouredTriangle::init();
+  let app = ColouredTriangle::init();
   //let app = TexturedTriangle::init();
   //let app = TexturedQuad::init();
   //let app = Transformations::init();
-  let app = Camera::init();
+  //let app = Lighting::init();
   run_app(app);
 }
 

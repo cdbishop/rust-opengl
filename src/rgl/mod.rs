@@ -6,6 +6,7 @@ pub mod texture;
 pub mod application;
 pub mod camera;
 pub mod mouse;
+pub mod vertexbuffer;
 
 pub use self::core::{
   RglContext,
@@ -36,4 +37,8 @@ pub use self::camera::{
 
 pub use self::mouse::{
   RglMouse,
+};
+
+pub use self::vertexbuffer::{
+  RglVertexBuffer,
 };

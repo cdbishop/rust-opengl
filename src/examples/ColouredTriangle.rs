@@ -31,12 +31,19 @@ impl RglApplication for ColouredTriangle {
     };
 
     let triangle = {
-      let vertices: [f32; 18] = [
-        -0.5, -0.5, 0.0, 1.0, 0.0, 0.0,
-        0.5, -0.5, 0.0, 0.0, 1.0, 0.0,
-        0.0,  0.5, 0.0, 0.0, 0.0, 1.0
+      let pos: [f32; 9] = [
+        -0.5, -0.5, 0.0, 
+        0.5, -0.5, 0.0,
+        0.0,  0.5, 0.0
       ];
-      let triangle = RglMesh::from_vertex_data(&vertices);
+
+      let col: [f32; 9] = [
+        1.0, 0.0, 0.0,
+         0.0, 1.0, 0.0,
+          0.0, 0.0, 1.0
+      ];
+
+      let triangle = RglMesh::from_pos_col_tex(&pos, &col, &[], 3);
       triangle
     };
 
