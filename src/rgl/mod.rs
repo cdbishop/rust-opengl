@@ -1,3 +1,9 @@
+#![feature(macro_rules)]
+
+#[macro_use]
+pub mod error {
+  pub use glCheckError_;
+}
 
 pub mod core;
 pub mod mesh;
