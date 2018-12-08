@@ -5,7 +5,7 @@ use cgmath::prelude::*;
 pub struct RglCamera {
   front: Vector3<f32>,
   up: Vector3<f32>,
-  pos: Point3<f32>,
+  pub pos: Point3<f32>,
   yaw: f32,
   pitch: f32,
 }

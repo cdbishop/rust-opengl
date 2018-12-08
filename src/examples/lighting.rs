@@ -125,11 +125,13 @@ impl RglApplication for Lighting {
     let transformation = projection.mul(view.mul(model));
 
     self.shader_program.set_uniform_1f("ambientStrength", 0.1);
+    self.shader_program.set_uniform_1f("specularStrength", 0.5);
     self.shader_program.set_uniform_4fv("transform", &transformation);
     self.shader_program.set_uniform_4fv("model", &model);
     self.shader_program.set_uniform_3f("objectColor", &[1.0, 0.5, 0.31]);
     self.shader_program.set_uniform_3f("lightColor", &[1.0, 1.0, 1.0]);    
     self.shader_program.set_uniform_3f("lightPos", &[0.0, 0.0, 3.0]);
+    self.shader_program.set_uniform_3f("viewPos", self.cam.pos.as_ref());
 
     self.cube.bind();
     self.cube.draw(); 
