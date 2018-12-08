@@ -3,11 +3,16 @@ use self::glfw::{Context, Key, Action};
 use std::sync::mpsc::Receiver;
 
 use std::str;
+use std::ptr;
 
 extern crate image;
 
 use rgl::RglMouse;
-use rgl::texture::RglTexture;
+
+use rgl::error::{
+  gl_check_error_,
+  gl_debug_output
+};
 
 ///////////////////////////////////////////////////////
 /// RglContext 
@@ -25,12 +30,15 @@ impl RglContext {
     let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).unwrap();
     glfw.window_hint(glfw::WindowHint::ContextVersion(3, 3));
     glfw.window_hint(glfw::WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
+    glfw.window_hint(glfw::WindowHint::OpenGlDebugContext(true));    
 
     let out = RglContext {
       ctx: glfw,
       last_frame: 0.0,
       delta: 0.0
     };
+
+    println!("starting up!");
 
     out
   }
@@ -83,6 +91,11 @@ impl RglWindow {
     
     unsafe {
       gl::Enable(gl::DEPTH_TEST);
+      gl::Enable(gl::DEBUG_OUTPUT);
+      gl::Enable(gl::DEBUG_OUTPUT_SYNCHRONOUS);
+      gl::DebugMessageCallback(gl_debug_output, ptr::null());
+      gl::DebugMessageControl(gl::DONT_CARE, gl::DONT_CARE, gl::DONT_CARE, 0, ptr::null(), gl::TRUE);
+      gl_check_error_(file!(), line!());
     }
   }
 

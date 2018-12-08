@@ -20,11 +20,11 @@ use examples::lighting::Lighting;
 
 pub fn main() {
 
-  let app = ColouredTriangle::init();
+  //let app = ColouredTriangle::init();
   //let app = TexturedTriangle::init();
   //let app = TexturedQuad::init();
   //let app = Transformations::init();
-  //let app = Lighting::init();
+  let app = Lighting::init();
   run_app(app);
 }
 

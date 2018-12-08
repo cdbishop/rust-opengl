@@ -1,10 +1,3 @@
-#![feature(macro_rules)]
-
-#[macro_use]
-pub mod error {
-  pub use glCheckError_;
-}
-
 pub mod core;
 pub mod mesh;
 pub mod shader;
@@ -13,6 +6,7 @@ pub mod application;
 pub mod camera;
 pub mod mouse;
 pub mod vertexbuffer;
+pub mod error;
 
 pub use self::core::{
   RglContext,
@@ -47,4 +41,8 @@ pub use self::mouse::{
 
 pub use self::vertexbuffer::{
   RglVertexBuffer,
+};
+
+pub use self::error::{
+  gl_check_error_,
 };

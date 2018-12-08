@@ -3,7 +3,7 @@
 use std::os::raw::c_void;
 use std::ffi::CStr;
 
-extern "system" fn glDebugOutput(source: gl::types::GLenum,
+pub extern "system" fn gl_debug_output(source: gl::types::GLenum,
                                  type_: gl::types::GLenum,
                                  id: gl::types::GLuint,
                                  severity: gl::types::GLenum,
@@ -51,10 +51,10 @@ extern "system" fn glDebugOutput(source: gl::types::GLenum,
     }
 }
 
-pub unsafe fn glCheckError_(file: &str, line: u32) -> u32 {
-    let mut errorCode = gl::GetError();
-    while errorCode != gl::NO_ERROR {
-        let error = match errorCode {
+pub unsafe fn gl_check_error_(file: &str, line: u32) -> u32 {
+    let mut error_code = gl::GetError();
+    while error_code != gl::NO_ERROR {
+        let error = match error_code {
             gl::INVALID_ENUM => "INVALID_ENUM",
             gl::INVALID_VALUE => "INVALID_VALUE",
             gl::INVALID_OPERATION => "INVALID_OPERATION",
@@ -67,14 +67,7 @@ pub unsafe fn glCheckError_(file: &str, line: u32) -> u32 {
 
         println!("{} | {} ({})", error, file, line);
 
-        errorCode = gl::GetError();
+        error_code = gl::GetError();
     }
-    errorCode
-}
-
-#[macro_export]
-macro_rules! glCheckError {
-    () => (
-        rgl::error::glCheckError_(file!(), line!())
-    )
+    error_code
 }
