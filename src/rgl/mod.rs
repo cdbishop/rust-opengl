@@ -1,4 +1,3 @@
-
 pub mod core;
 pub mod mesh;
 pub mod shader;
@@ -6,6 +5,8 @@ pub mod texture;
 pub mod application;
 pub mod camera;
 pub mod mouse;
+pub mod vertexbuffer;
+pub mod error;
 
 pub use self::core::{
   RglContext,
@@ -36,4 +37,12 @@ pub use self::camera::{
 
 pub use self::mouse::{
   RglMouse,
+};
+
+pub use self::vertexbuffer::{
+  RglVertexBuffer,
+};
+
+pub use self::error::{
+  gl_check_error_,
 };
