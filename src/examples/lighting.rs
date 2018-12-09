@@ -41,53 +41,9 @@ impl RglApplication for Lighting {
     };
 
     let cube = {
-      let texture = RglTexture::from_file("textures/brickwall.jpg");
-
-      let vertices: [f32; 216] = [
-        -0.5, -0.5, -0.5,  0.0,  0.0, -1.0,
-          0.5, -0.5, -0.5,  0.0,  0.0, -1.0,
-          0.5,  0.5, -0.5,  0.0,  0.0, -1.0,
-          0.5,  0.5, -0.5,  0.0,  0.0, -1.0,
-        -0.5,  0.5, -0.5,  0.0,  0.0, -1.0,
-        -0.5, -0.5, -0.5,  0.0,  0.0, -1.0,
-
-        -0.5, -0.5,  0.5,  0.0,  0.0,  1.0,
-          0.5, -0.5,  0.5,  0.0,  0.0,  1.0,
-          0.5,  0.5,  0.5,  0.0,  0.0,  1.0,
-          0.5,  0.5,  0.5,  0.0,  0.0,  1.0,
-        -0.5,  0.5,  0.5,  0.0,  0.0,  1.0,
-        -0.5, -0.5,  0.5,  0.0,  0.0,  1.0,
-
-        -0.5,  0.5,  0.5, -1.0,  0.0,  0.0,
-        -0.5,  0.5, -0.5, -1.0,  0.0,  0.0,
-        -0.5, -0.5, -0.5, -1.0,  0.0,  0.0,
-        -0.5, -0.5, -0.5, -1.0,  0.0,  0.0,
-        -0.5, -0.5,  0.5, -1.0,  0.0,  0.0,
-        -0.5,  0.5,  0.5, -1.0,  0.0,  0.0,
-
-          0.5,  0.5,  0.5,  1.0,  0.0,  0.0,
-          0.5,  0.5, -0.5,  1.0,  0.0,  0.0,
-          0.5, -0.5, -0.5,  1.0,  0.0,  0.0,
-          0.5, -0.5, -0.5,  1.0,  0.0,  0.0,
-          0.5, -0.5,  0.5,  1.0,  0.0,  0.0,
-          0.5,  0.5,  0.5,  1.0,  0.0,  0.0,
-
-        -0.5, -0.5, -0.5,  0.0, -1.0,  0.0,
-          0.5, -0.5, -0.5,  0.0, -1.0,  0.0,
-          0.5, -0.5,  0.5,  0.0, -1.0,  0.0,
-          0.5, -0.5,  0.5,  0.0, -1.0,  0.0,
-        -0.5, -0.5,  0.5,  0.0, -1.0,  0.0,
-        -0.5, -0.5, -0.5,  0.0, -1.0,  0.0,
-
-        -0.5,  0.5, -0.5,  0.0,  1.0,  0.0,
-          0.5,  0.5, -0.5,  0.0,  1.0,  0.0,
-          0.5,  0.5,  0.5,  0.0,  1.0,  0.0,
-          0.5,  0.5,  0.5,  0.0,  1.0,  0.0,
-        -0.5,  0.5,  0.5,  0.0,  1.0,  0.0,
-        -0.5,  0.5, -0.5,  0.0,  1.0,  0.0
-      ];
-
-      let mut cube = RglMesh::from_data(&vertices, &[3, 3]);
+      let texture = RglTexture::from_file("textures/container2.png");
+      //let mut cube = RglMesh::from_data(&vertices, &[3, 3]);
+      let mut cube = RglMesh::create_cube();
       cube.set_texture(texture);
       cube
     };
@@ -115,7 +71,7 @@ impl RglApplication for Lighting {
 
   fn draw(&mut self) {
     self.shader_program.apply();
-    //self.shader_program.set_uniform_1i("texture1", 0);
+    self.shader_program.set_uniform_1i("texture", 0);
 
     let model: Matrix4<f32> = Matrix4::from_axis_angle(vec3(0.0, 1.0, 0.0).normalize(),
                                                              Rad(self.window.get_time() as f32));
@@ -128,7 +84,6 @@ impl RglApplication for Lighting {
     self.shader_program.set_uniform_1f("specularStrength", 0.5);
     self.shader_program.set_uniform_4fv("transform", &transformation);
     self.shader_program.set_uniform_4fv("model", &model);
-    self.shader_program.set_uniform_3f("objectColor", &[1.0, 0.5, 0.31]);
     self.shader_program.set_uniform_3f("lightColor", &[1.0, 1.0, 1.0]);    
     self.shader_program.set_uniform_3f("lightPos", &[0.0, 0.0, 3.0]);
     self.shader_program.set_uniform_3f("viewPos", self.cam.pos.as_ref());

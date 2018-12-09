@@ -8,6 +8,7 @@ use std::os::raw::c_void;
 
 extern crate image;
 use self::image::GenericImage;
+use self::image::DynamicImage::*;
 
 ///////////////////////////////////////////////////////
 /// RglTexture
@@ -30,10 +31,16 @@ impl RglTexture {
       gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::LINEAR as i32);
 
       let img = image::open(&Path::new(path)).expect("Failed to load texture");
+      let format = match img {
+        ImageLuma8(_) => gl::RED,
+        ImageLumaA8(_) => gl::RG,
+        ImageRgb8(_) => gl::RGB,
+        ImageRgba8(_) => gl::RGBA,
+      };
       let data = img.raw_pixels();
       gl::TexImage2D(gl::TEXTURE_2D, 0,
-        gl::RGB as i32, img.width() as i32, img.height() as i32, 0,
-        gl::RGB, gl::UNSIGNED_BYTE, &data[0] as *const u8 as *const c_void);
+        format as i32, img.width() as i32, img.height() as i32, 0,
+        format, gl::UNSIGNED_BYTE, &data[0] as *const u8 as *const c_void);
 
       gl::GenerateMipmap(gl::TEXTURE_2D);
 

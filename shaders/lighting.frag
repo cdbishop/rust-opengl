@@ -1,7 +1,6 @@
 #version 330 core
 out vec4 FragColor;
 
-uniform vec3 objectColor;
 uniform vec3 lightColor;
 uniform float ambientStrength;
 uniform float specularStrength;
@@ -10,10 +9,13 @@ uniform vec3 viewPos;
 
 in vec3 FragPos;
 in vec3 Normal;
+in vec2 TexCoords;
+
+uniform sampler2D diffuseTexture;
 
 void main()
 {
-  vec3 ambient = ambientStrength * lightColor;
+  vec3 ambient = ambientStrength * vec3(texture(diffuseTexture, TexCoords));
 
   vec3 norm = normalize(Normal);
   vec3 lightDir = normalize(lightPos - FragPos);
@@ -24,8 +26,8 @@ void main()
   vec3 specular = specularStrength * spec * lightColor;
 
   float dotProduct = max(dot(norm, lightDir), 0.0);
-  vec3 diffuse = dotProduct * lightColor;
+  vec3 diffuse = dotProduct * lightColor * vec3(texture(diffuseTexture, TexCoords));
 
-  vec3 result = (ambient + diffuse + specular) * objectColor;
+  vec3 result = (ambient + diffuse + specular);
 	FragColor = vec4(result, 1.0);
 }
