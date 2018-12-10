@@ -7,6 +7,7 @@ pub mod camera;
 pub mod mouse;
 pub mod vertexbuffer;
 pub mod error;
+pub mod terrain;
 
 pub use self::core::{
   RglContext,
@@ -45,4 +46,8 @@ pub use self::vertexbuffer::{
 
 pub use self::error::{
   gl_check_error_,
+};
+
+pub use self::terrain::{
+  RglTerrain,
 };

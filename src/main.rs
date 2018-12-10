@@ -17,6 +17,7 @@ use examples::transformations::Transformations;
 use examples::cube::Cube;
 use examples::camera::Camera;
 use examples::lighting::Lighting;
+use examples::terrain::Terrain;
 
 pub fn main() {
 
@@ -24,7 +25,8 @@ pub fn main() {
   //let app = TexturedTriangle::init();
   //let app = TexturedQuad::init();
   //let app = Transformations::init();
-  let app = Lighting::init();
+  //let app = Lighting::init();
+  let app = Terrain::init();
   run_app(app);
 }
 
