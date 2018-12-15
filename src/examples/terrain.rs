@@ -41,7 +41,7 @@ impl RglApplication for Terrain {
       shader_program
     };
 
-    let terrain = RglTerrain::new(1, 1);
+    let terrain = RglTerrain::new(8, 8);
 
     Terrain { window, shader_program, terrain, cam: RglCamera::new(Point3::new(0.0, 0.0, 3.0)) }
   }
