@@ -43,21 +43,27 @@ impl RglApplication for Terrain {
 
     let terrain = RglTerrain::new(8, 8);
 
-    Terrain { window, shader_program, terrain, cam: RglCamera::new(Point3::new(0.0, 0.0, 3.0)) }
+    Terrain { window, shader_program, terrain, cam: RglCamera::new(Point3::new(0.0, 50.0, 3.0)) }
   }
 
   fn update(&mut self) {
+
+    let mut speed = 2.5;
+    if self.key_pressed(Key::LeftShift) {
+      speed = 25.0;
+    }
+
     let dt = self.get_window().dt();
     if self.key_pressed(Key::W) {
-      self.cam.move_forward(2.5 * dt);
+      self.cam.move_forward(speed * dt);
     } else if self.key_pressed(Key::S) {
-      self.cam.move_forward(-2.5 * dt);
+      self.cam.move_forward(speed * -1.0 * dt);
     }
 
     if self.key_pressed(Key::A) {
-      self.cam.strafe(-2.5 * dt);
+      self.cam.strafe(speed * -1.0 * dt);
     } else if self.key_pressed(Key::D) {
-      self.cam.strafe(2.5 * dt);
+      self.cam.strafe(speed * dt);
     }
 
     self.cam.rotate_yaw(self.window.mouse.delta_x() * 0.1);
@@ -73,7 +79,7 @@ impl RglApplication for Terrain {
     //                                                          Rad(self.window.get_time() as f32));
 
     let view = self.cam.get_view();
-    let projection: Matrix4<f32> = perspective(Deg(45.0), 800 as f32 / 600 as f32, 0.1, 100.0);
+    let projection: Matrix4<f32> = perspective(Deg(45.0), 800 as f32 / 600 as f32, 0.1, 1000.0);
     let transformation = projection.mul(view.mul(model));
 
     self.shader_program.set_uniform_1f("ambientStrength", 0.1);
@@ -81,7 +87,7 @@ impl RglApplication for Terrain {
     self.shader_program.set_uniform_4fv("transform", &transformation);
     self.shader_program.set_uniform_4fv("model", &model);
     self.shader_program.set_uniform_3f("lightColor", &[1.0, 1.0, 1.0]);
-    self.shader_program.set_uniform_3f("lightPos", &[0.0, 0.0, 3.0]);
+    self.shader_program.set_uniform_3f("lightPos", &[0.0, 100.0, 3.0]);
     self.shader_program.set_uniform_3f("viewPos", self.cam.pos.as_ref());
 
     self.terrain.draw();
