@@ -1,12 +1,8 @@
-extern crate glfw;
-
 use gl::types::*;
 
 use std::ptr;
 use std::mem;
 use std::os::raw::c_void;
-
-extern crate image;
 
 use rgl::texture::RglTexture;
 use rgl::vertexbuffer::RglVertexBuffer;

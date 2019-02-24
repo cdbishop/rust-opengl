@@ -1,11 +1,8 @@
-extern crate glfw;
-use self::glfw::{Context, Key, Action};
+use glfw::{Context, Key, Action};
 use std::sync::mpsc::Receiver;
 
 use std::str;
 use std::ptr;
-
-extern crate image;
 
 use rgl::RglMouse;
 

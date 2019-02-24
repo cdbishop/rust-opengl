@@ -1,11 +1,8 @@
-extern crate glfw;
-
 use std::str;
 use std::path::Path;
 
-extern crate image;
-use self::image::DynamicImage;
-use self::image::GenericImage;
+use image::DynamicImage;
+use image::GenericImage;
 
 ///////////////////////////////////////////////////////
 /// RglHeightmap

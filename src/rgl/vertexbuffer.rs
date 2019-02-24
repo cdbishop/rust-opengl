@@ -1,5 +1,3 @@
-extern crate glfw;
-
 use std::ptr;
 use std::mem;
 use std::os::raw::c_void;
@@ -53,7 +51,6 @@ impl RglVertexBuffer {
 
         vertex_attrib += 1;
         offset = offset + (*x as usize);
-        println!("offset = {}", offset);
         offset_ptr = (offset * mem::size_of::<gl::types::GLfloat>()) as *const c_void
       }
 
@@ -104,7 +101,6 @@ impl RglVertexBuffer {
 
         vertex_attrib += 1;
         offset = offset + (*x as usize);
-        println!("offset = {}", offset);
         offset_ptr = (offset * mem::size_of::<gl::types::GLfloat>()) as *const c_void
       }
 

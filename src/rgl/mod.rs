@@ -31,6 +31,7 @@ pub use self::shader::{
 
 pub use self::application::{
   RglApplication,
+  run_app,
 };
 
 pub use self::camera::{

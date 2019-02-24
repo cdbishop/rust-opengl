@@ -1,4 +1,3 @@
-extern crate glfw;
 
 use rgl::mesh::RglMesh;
 use rgl::texture::RglTexture;

@@ -1,14 +1,11 @@
-extern crate glfw;
-
 use gl::types::*;
 
 use std::str;
 use std::path::Path;
 use std::os::raw::c_void;
 
-extern crate image;
-use self::image::GenericImage;
-use self::image::DynamicImage::*;
+use image::GenericImage;
+use image::DynamicImage::*;
 
 ///////////////////////////////////////////////////////
 /// RglTexture

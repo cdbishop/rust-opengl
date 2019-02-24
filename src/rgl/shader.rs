@@ -1,5 +1,3 @@
-extern crate glfw;
-
 use std::ffi::CString;
 use gl::types::*;
 
