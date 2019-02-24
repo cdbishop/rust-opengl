@@ -1,5 +1,5 @@
 [package]
-name = "opengl"
+name = "rgl"
 version = "0.1.0"
 authors = ["Craig Bishop <craig.bishop@vcatechnology.com>"]
 
