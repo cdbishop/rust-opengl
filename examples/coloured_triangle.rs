@@ -1,5 +1,5 @@
-
-use super::super::rgl::{
+extern crate rgl;
+use rgl::{
   RglContext,
   RglWindow,
   RglMesh,
@@ -7,6 +7,7 @@ use super::super::rgl::{
   RglShaderKind,
   RglShaderProgram,
   RglApplication,
+  run_app
 };
 
 
@@ -64,4 +65,9 @@ impl RglApplication for ColouredTriangle {
   fn get_window(&mut self) -> &mut RglWindow {
     return &mut self.window;
   }
+}
+
+pub fn main() {
+  let app = ColouredTriangle::init();
+  run_app(app);
 }

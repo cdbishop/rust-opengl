@@ -1,5 +1,8 @@
+extern crate rgl;
+extern crate cgmath;
+extern crate glfw;
 
-use super::super::rgl::{
+use rgl::{
   RglContext,
   RglWindow,
   RglMesh,
@@ -8,6 +11,7 @@ use super::super::rgl::{
   RglShaderKind,
   RglShaderProgram,
   RglApplication,
+  run_app
 };
 
 use cgmath::{Matrix4, vec3, Rad};
@@ -92,4 +96,9 @@ impl RglApplication for Transformations {
   fn get_window(&mut self) -> &mut RglWindow {
     return &mut self.window;
   }
+}
+
+pub fn main() {
+  let app = Transformations::init();
+  run_app(app);
 }

@@ -1,6 +1,8 @@
+extern crate rgl;
+extern crate cgmath;
 extern crate glfw;
 
-use super::super::rgl::{
+use rgl::{
   RglContext,
   RglWindow,
   RglMesh,
@@ -10,6 +12,7 @@ use super::super::rgl::{
   RglShaderProgram,
   RglApplication,
   RglCamera,
+  run_app
 };
 
 use self::glfw::{Key};
@@ -178,4 +181,9 @@ impl RglApplication for Camera {
   fn get_window(&mut self) -> &mut RglWindow {
     return &mut self.window;
   }
+}
+
+pub fn main() {
+  let app = Camera::init();
+  run_app(app);
 }

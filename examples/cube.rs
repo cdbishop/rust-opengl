@@ -1,5 +1,7 @@
+extern crate rgl;
+extern crate cgmath;
 
-use super::super::rgl::{
+use rgl::{
   RglContext,
   RglWindow,
   RglMesh,
@@ -8,6 +10,7 @@ use super::super::rgl::{
   RglShaderKind,
   RglShaderProgram,
   RglApplication,
+  run_app
 };
 
 use cgmath::{Matrix4, vec3, Rad, perspective, Deg};
@@ -158,4 +161,9 @@ impl RglApplication for Cube {
   fn get_window(&mut self) -> &mut RglWindow {
     return &mut self.window;
   }
+}
+
+pub fn main() {
+  let app = Cube::init();
+  run_app(app);
 }
