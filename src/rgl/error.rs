@@ -9,7 +9,7 @@ pub extern "system" fn gl_debug_output(source: gl::types::GLenum,
                                  severity: gl::types::GLenum,
                                  _length: gl::types::GLsizei,
                                  message: *const gl::types::GLchar,
-                                 _userParam: *mut c_void)
+                                 _user_param: *mut c_void)
 {
     if id == 131_169 || id == 131_185 || id == 131_218 || id == 131_204 {
         // ignore these non-significant error codes

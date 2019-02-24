@@ -4,6 +4,9 @@ use rgl::mesh::RglMesh;
 use rgl::texture::RglTexture;
 use rgl::heightmap::RglHeightmap;
 
+// use cgmath::{vec3};
+// use cgmath::prelude::*;
+
 ///////////////////////////////////////////////////////
 /// RglTerrain
 ///////////////////////////////////////////////////////
@@ -13,39 +16,40 @@ pub struct RglTerrain {
 
 impl RglTerrain {
 
-  pub fn new(width: u32, depth: u32) -> RglTerrain {
+  pub fn new(_width: u32, _depth: u32) -> RglTerrain {
 
+    // TODO: move this to diff function?
     let heightmap = RglHeightmap::from_file("textures/terrain_small.png");
     let width = heightmap.get_image_width() / 2;
     let depth = heightmap.get_image_height() / 2;
 
-    let numVertRows = width * 2;
-    let numVertCols = depth * 2;
+    let num_vert_rows = width * 2;
+    let num_vert_cols = depth * 2;
     let dx = 1.0;
     let dz = 1.0;
-    let numVertices = (numVertRows * numVertCols) as usize;
-    let numCellRows = numVertRows - 1;
-    let numCellCols = numVertCols - 1;
+    let num_vertices = (num_vert_rows * num_vert_cols) as usize;
+    let num_cell_rows = num_vert_rows - 1;
+    let num_cell_cols = num_vert_cols - 1;
 
-    let width = numCellCols as f32 * dx;
-    let depth = numCellRows as f32 * dz;
+    let width = num_cell_cols as f32 * dx;
+    let depth = num_cell_rows as f32 * dz;
 
-    let numTris = (numCellRows * numCellCols * 2) as usize;
+    let num_tris = (num_cell_rows * num_cell_cols * 2) as usize;
 
-    let mut vertices:Vec<f32> = Vec::with_capacity(numVertices * 8);
-    vertices.resize(numVertices * 8, 0.0);
+    let mut vertices:Vec<f32> = Vec::with_capacity(num_vertices * 8);
+    vertices.resize(num_vertices * 8, 0.0);
 
-    let xOffset = width as f32 * -0.5;
-    let zOffset = depth as f32 * 0.5;    
+    let x_offset = width as f32 * -0.5;
+    let z_offset = depth as f32 * 0.5;    
 
     let mut k = 0;    
-    for i in 0..numVertRows {
-      for j in 0..numVertCols {
-        vertices[k] = j as f32 * dx as f32 + xOffset;
+    for i in 0..num_vert_rows {
+      for j in 0..num_vert_cols {
+        vertices[k] = j as f32 * dx as f32 + x_offset;
         let mut h:f32 = heightmap.get_height(i, j).into();     
         h = h / 10.0;   
         vertices[k + 1] = h;
-        vertices[k + 2] = (i as f32 * -1.0) * dz as f32 + zOffset;
+        vertices[k + 2] = (i as f32 * -1.0) * dz as f32 + z_offset;
 
         vertices[k + 3] = 0.0;
         vertices[k + 4] = 1.0;
@@ -60,26 +64,25 @@ impl RglTerrain {
       } 
     }
 
-    let mut indices:Vec<i32> = Vec::with_capacity(numTris * 8);
-    indices.resize(numTris * 6, 0);
+    let mut indices:Vec<i32> = Vec::with_capacity(num_tris * 8);
+    indices.resize(num_tris * 6, 0);
 
     k = 0;
-    for i in 0..numCellRows {
-      for j in 0..numCellCols {
-        indices[k] = (i * numVertCols + j) as i32;
-        indices[k + 1] = (i * numVertCols + j + 1) as i32;
-        indices[k + 2] = ((i + 1) * numVertCols + j) as i32;
+    for i in 0..num_cell_rows {
+      for j in 0..num_cell_cols {
+        indices[k] = (i * num_vert_cols + j) as i32;
+        indices[k + 1] = (i * num_vert_cols + j + 1) as i32;
+        indices[k + 2] = ((i + 1) * num_vert_cols + j) as i32;
 
-        indices[k + 3] = ((i + 1) * numVertCols + j) as i32;
-        indices[k + 4] = (i * numVertCols + j + 1) as i32;
-        indices[k + 5] = ((i + 1) * numVertCols + j + 1) as i32;
+        indices[k + 3] = ((i + 1) * num_vert_cols + j) as i32;
+        indices[k + 4] = (i * num_vert_cols + j + 1) as i32;
+        indices[k + 5] = ((i + 1) * num_vert_cols + j + 1) as i32;
 
         k += 6;
       }
     } 
 
     let mut mesh = RglMesh::from_data_indexed(&vertices, &[3, 3, 2], &indices);
-    //mesh.set_wireframe(true);
     let texture = RglTexture::from_file("textures/grass.jpg");
     mesh.set_texture(texture);
     RglTerrain { mesh: mesh }

@@ -3,8 +3,6 @@ extern crate glfw;
 use super::super::rgl::{
   RglContext,
   RglWindow,
-  RglMesh,
-  RglTexture,
   RglShader,
   RglShaderKind,
   RglShaderProgram,
@@ -15,7 +13,7 @@ use super::super::rgl::{
 
 use self::glfw::{Key};
 
-use cgmath::{Matrix4, vec3, Rad, perspective, Deg, Point3};
+use cgmath::{Matrix4, perspective, Deg, Point3};
 use cgmath::prelude::*;
 
 use std::ops::Mul;
@@ -48,9 +46,9 @@ impl RglApplication for Terrain {
 
   fn update(&mut self) {
 
-    let mut speed = 2.5;
+    let mut speed = 25.0;
     if self.key_pressed(Key::LeftShift) {
-      speed = 25.0;
+      speed = 50.0;
     }
 
     let dt = self.get_window().dt();

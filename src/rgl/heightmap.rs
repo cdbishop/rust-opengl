@@ -5,7 +5,6 @@ use std::path::Path;
 
 extern crate image;
 use self::image::DynamicImage;
-use self::image::DynamicImage::*;
 use self::image::GenericImage;
 
 ///////////////////////////////////////////////////////
@@ -19,14 +18,14 @@ pub struct RglHeightmap {
 impl RglHeightmap {
 
   pub fn from_file(path: &str) -> RglHeightmap {
-    let img = unsafe {      
+    let img = {      
       let img = image::open(&Path::new(path)).expect("Failed to load texture");
-      let format = match img {
-        ImageLuma8(_) => gl::RED,
-        ImageLumaA8(_) => gl::RG,
-        ImageRgb8(_) => gl::RGB,
-        ImageRgba8(_) => gl::RGBA,
-      };
+      // let format = match img {
+      //   ImageLuma8(_) => gl::RED,
+      //   ImageLumaA8(_) => gl::RG,
+      //   ImageRgb8(_) => gl::RGB,
+      //   ImageRgba8(_) => gl::RGBA,
+      // };
 
       img
     };
