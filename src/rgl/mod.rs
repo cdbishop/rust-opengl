@@ -8,6 +8,7 @@ pub mod mouse;
 pub mod vertexbuffer;
 pub mod error;
 pub mod terrain;
+pub mod heightmap;
 
 pub use self::core::{
   RglContext,
@@ -50,4 +51,8 @@ pub use self::error::{
 
 pub use self::terrain::{
   RglTerrain,
+};
+
+pub use self::heightmap::{
+  RglHeightmap,
 };

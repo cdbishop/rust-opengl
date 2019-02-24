@@ -19,6 +19,7 @@ pub struct RglMesh {
   pub index_buffer: Option<u32>,
   pub texture: Option<RglTexture>,
   pub vertex_buffer: RglVertexBuffer,
+  pub num_indices: u32,
 
   wireframe: bool,
 }
@@ -105,7 +106,7 @@ impl RglMesh {
 
 
     return RglMesh {index_buffer: None, texture: None,
-      vertex_buffer: RglVertexBuffer::from_data_vec(&vertices, &[pos_elems, col_elems, tex_elems]), wireframe: false };
+      vertex_buffer: RglVertexBuffer::from_data_vec(&vertices, &[pos_elems, col_elems, tex_elems]), num_indices: 0, wireframe: false };
   }
 
   pub fn from_pos_col_tex_index(positions: &[f32], colors: &[f32], texcoords: &[f32], indices: &[i32], num_vertex: u32) -> RglMesh {
@@ -136,11 +137,12 @@ impl RglMesh {
     }
 
     return RglMesh {index_buffer: Some(index_buffer), texture: None,
-      vertex_buffer: RglVertexBuffer::from_data_vec(&vertices, &[3, 3, 2]), wireframe: false };
+      vertex_buffer: RglVertexBuffer::from_data_vec(&vertices, &[3, 3, 2]), num_indices: 0, wireframe: false };
   }
 
   pub fn from_data(data: &[f32], parts: &[i32]) -> RglMesh {
-    return RglMesh {index_buffer: None, texture: None, vertex_buffer: RglVertexBuffer::from_data(data, parts), wireframe: false };
+    return RglMesh {index_buffer: None, texture: None, vertex_buffer: RglVertexBuffer::from_data(data, parts),
+      num_indices: 0, wireframe: false };
   }
 
   pub fn from_data_indexed(data: &[f32], parts: &[i32], indices: &[i32]) -> RglMesh {
@@ -154,7 +156,8 @@ impl RglMesh {
                       gl::STATIC_DRAW);
     }
 
-    return RglMesh {index_buffer: Some(index_buffer), texture: None, vertex_buffer: RglVertexBuffer::from_data(data, parts), wireframe: false };
+    return RglMesh {index_buffer: Some(index_buffer), texture: None, vertex_buffer: RglVertexBuffer::from_data(data, parts),
+      num_indices: indices.len() as u32, wireframe: false };
   }
 
   pub fn set_texture(&mut self, texture: RglTexture) {
@@ -179,7 +182,9 @@ impl RglMesh {
   pub fn draw(&self) {
     unsafe {
 
-      gl::PolygonMode(gl::FRONT_AND_BACK, gl::LINE);
+      if self.wireframe {
+        gl::PolygonMode(gl::FRONT_AND_BACK, gl::LINE);
+      }
 
       match &self.texture {
         Some(t) => t.bind(),
@@ -187,11 +192,13 @@ impl RglMesh {
       }
 
       match &self.index_buffer {
-        Some(_) => gl::DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, ptr::null()),
+        Some(_) => gl::DrawElements(gl::TRIANGLES, self.num_indices as i32, gl::UNSIGNED_INT, ptr::null()),
         None => gl::DrawArrays(gl::TRIANGLES, 0, self.vertex_buffer.count as i32)
       }
 
-      gl::PolygonMode(gl::FRONT_AND_BACK, gl::FILL);
+      if self.wireframe {
+        gl::PolygonMode(gl::FRONT_AND_BACK, gl::FILL);
+      }
     }
   }
 }
