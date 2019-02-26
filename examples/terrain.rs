@@ -76,9 +76,6 @@ impl RglApplication for Terrain {
     self.shader_program.set_uniform_1i("texture", 0);
 
     let model: Matrix4<f32> = Matrix4::identity();
-    // let model: Matrix4<f32> = Matrix4::from_axis_angle(vec3(0.0, 1.0, 0.0).normalize(),
-    //                                                          Rad(self.window.get_time() as f32));
-
     let view = self.cam.get_view();
     let projection: Matrix4<f32> = perspective(Deg(45.0), 800 as f32 / 600 as f32, 0.1, 1000.0);
     let transformation = projection.mul(view.mul(model));
